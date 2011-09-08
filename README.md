@@ -4,6 +4,8 @@ Deck.js-CodeMirror Extension
 This extension allows you to embed codemirror code snippets in your slides. Those codeblocks
 can also be executable, which is pretty exciting.
 
+An example is running here: http://ireneros.com/deck/codemirror-introduction
+
 # Installation: #
 
 Move all this into a folder called 'codemirror' in your deck.js/extensions/ folder.
