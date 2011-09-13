@@ -62,7 +62,12 @@ Inside your slide:
 Regardless of your element type, the following attributes should be set:
 
 * class - code (should always be set to code.)
-* mode  - language mode (currently only javascript/ruby/yaml is supported. I can add more, just submit a ticket. Trying to keep things small and compressed.)
+* mode  - language mode. Supported Modes:
+ * javascript
+ * yaml
+ * ruby
+ * text/html (needs to be specified this way)
+ * xml
 * theme (optional) - If you want multiple themes in your slides, include multiple stylesheets and set this attribute to the theme name.
 * runnable (optiona) - If true, will add a Run button to the window and pipe the eval's console output to an output element right below. 
 
