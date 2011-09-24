@@ -4,7 +4,9 @@ Deck.js-CodeMirror Extension
 This extension allows you to embed codemirror code snippets in your slides. Those codeblocks
 can also be executable, which is pretty exciting.
 
-An example is running here: http://ireneros.com/deck/codemirror-introduction
+An example is running here: http://ireneros.com/deck/deck.js-codemirror/introduction
+
+You can also see those slides in the `introduction` folder.
 
 # Installation: #
 
@@ -18,6 +20,20 @@ Include the stylesheet:
 
 Include the JS source:
 
+    <!-- Base codemiror code -->
+    <script src="../extensions/codemirror/codemirror.js"></script>
+
+    <!-- Syntax highlighting Modes -->
+    
+    <!-- javascript -->
+    <script src="../mode/javascript/javascript.js"></script>
+
+    <!-- html mode (note html mode requires xml, css and javascript) -->
+    <script src="../extensions/codemirror/mode/xml/xml.js"></script>
+    <script src="../extensions/codemirror/mode/css/css.js"></script>
+    <script src="../extensions/codemirror/mode/htmlmixed/htmlmixed.js"></script>
+
+    <!-- Plugin code -->
     <script src="../extensions/codemirror/deck.codemirror.js"></script>
 
 Include your favorite CodeMirror syntax style:
@@ -31,6 +47,7 @@ Include your favorite CodeMirror syntax style:
     elegant.css
     neat.css
     night.css
+
 
 # Use: #
 
@@ -62,12 +79,7 @@ Inside your slide:
 Regardless of your element type, the following attributes should be set:
 
 * class - code (should always be set to code.)
-* mode  - language mode. Supported Modes:
- * javascript
- * yaml
- * ruby
- * text/html (needs to be specified this way)
- * xml
+* mode  - language mode. This plugin now supports all modes. Look into the mode directory and include the ones you like. Note that some require additional modes so be sure to check the Codemirror site.
 * theme (optional) - If you want multiple themes in your slides, include multiple stylesheets and set this attribute to the theme name.
 * runnable (optiona) - If true, will add a Run button to the window and pipe the eval's console output to an output element right below. 
 
