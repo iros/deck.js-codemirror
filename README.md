@@ -97,7 +97,7 @@ the editor that it's running for:
 Sometimes you just need to access a global of some kind. The code in the codemirror editors is executed
 in a sandbox, which means whatever it is you load in your actual slides, is NOT going to be available by default.
 To give access to, for example, jQuery object, define a "globals" attribute on the code blocks with 
-the names of the vars you need.
+the names of the vars you need. Globals can be comma delimited, for example: "$,Backbone,_".
 
     <textarea id="code4" name="code" class="code" mode="javascript" style="display: none;" runnable="true" globals="$">
       // output my log
