@@ -152,6 +152,7 @@
                 exposeGlobals = exposeGlobals.split(",");
 
                 $.each(exposeGlobals, function(prop, val) {
+                  val = $.trim(val);
                   iframe[0].contentWindow[val] = window[val];
                 });
               }
