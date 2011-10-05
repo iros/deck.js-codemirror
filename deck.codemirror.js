@@ -123,6 +123,9 @@
             return function(event) {
 
               // save the default logging behavior.
+              var real_console_log = console.log;
+              
+              // save the default logging behavior.
               // Following Dean Edward's fantastic sandbox code:
               // http://dean.edwards.name/weblog/2006/11/sandbox/+evaluating+js+in+an+iframe
               // create an iframe sandbox for this element.
@@ -131,7 +134,7 @@
                 .appendTo($d.find('body'));
 
               // Overwrite the default log behavior to pipe to an output element.
-              window.log = function(msg) {     
+              console.log = function(msg) {     
                 if (output.html() !== "") {
                   output.append("<br />" + msg);  
                 } else {
@@ -141,7 +144,7 @@
 
               var sandBoxMarkup = "<script>"+
                 "var MSIE/*@cc_on =1@*/;"+ // sniff
-                "console={ log: parent.log };" +
+                "console={ log: parent.console.log };" +
                 "parent.sandbox=MSIE?this:{eval:function(s){return eval(s)}}<\/script>";
 
               var exposeGlobals;
@@ -171,6 +174,9 @@
 
               // get rid of the frame. New Frame for every context.
               iframe.remove();
+              
+              // set the old logging behavior back.
+              console.log = real_console_log;
             }
           }(editor, output));
         }

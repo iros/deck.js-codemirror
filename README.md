@@ -74,6 +74,36 @@ Inside your slide:
       </div>
     </div>
 
+# Setup scripts: #
+
+Sometimes you have to do a lot of set up for your code that doesn't need to live inside
+the actual codemirror editor (because it's not of interest to your readers.) You can now 
+create hidden script tags that will be evaluated on "Run" before the editor code runs.
+
+It must have the type set to "codemirror" and the data-selector must be set to the selector of
+the editor that it's running for:
+
+    <script type="codemirror" data-selector="#code4">
+      var someVar = 10;
+    </script>
+
+    <textarea id="code4" name="code" class="code" mode="javascript" style="display: none;" runnable="true">
+      // output my log
+      console.log(someVar);
+    </textarea>
+
+# Globals! #
+
+Sometimes you just need to access a global of some kind. The code in the codemirror editors is executed
+in a sandbox, which means whatever it is you load in your actual slides, is NOT going to be available by default.
+To give access to, for example, jQuery object, define a "globals" attribute on the code blocks with 
+the names of the vars you need.
+
+    <textarea id="code4" name="code" class="code" mode="javascript" style="display: none;" runnable="true" globals="$">
+      // output my log
+      console.log($('script').size());
+    </textarea>
+
 # Element Attributes: #
 
 Regardless of your element type, the following attributes should be set:

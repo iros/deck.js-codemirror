@@ -129,7 +129,45 @@ console.log(1);</textarea></div>
 console.log(2);</textarea></div>
 		</section>
 
+    <section class="slide" id="hidden-script-tags">
+			<h2> Need to run some setup for your codes? </h2>
+			<h3> Embed a secret hidden script tag like so in your slide: </h3>
+			
+			<script type="codemirror" data-selector="#code4">
+			  var someVar = 10;
+			</script>
+			
+      <code>
+&lt;script type=&quot;codemirror&quot; data-selector=&quot;#code3&quot;&gt;<br/>
+  var someVar = 10;<br/>
+&lt;/script&gt;<br/>
+  		</code>
+  		
+  		<h3> Then your code </h3>
+			<div><textarea id="code4" name="code" class="code" mode="javascript" style="display: none;" runnable="true">// output my log
+console.log(someVar);</textarea></div>
+    </section>
 
+    <section class="slide" id="globals">
+			<h2> Sometimes you need some globals </h2>
+			<p> 
+			  Sometimes you just need to access a global of some kind. The code in the codemirror 
+			  editors is executed in a sandbox, which means whatever it is you load in your actual 
+			  slides, is NOT going to be available by default.
+			</p>
+			<p>
+        To give access to, for example, jQuery object, define a "globals" attribute on the code blocks with 
+        the names of the vars you need.
+      </p>
+      
+      <code>
+&lt;textarea id=&quot;code4&quot; name=&quot;code&quot; class=&quot;code&quot; mode=&quot;javascript&quot; style=&quot;display: none;&quot; runnable=&quot;true&quot; globals=&quot;$&quot;&gt;<br />  // output my log
+  console.log($(&#39;script&#39;).size());<br />&lt;/textarea&gt;<br />
+      </code>
+      <textarea id="code4" name="code" class="code" mode="javascript" style="display: none;" runnable="true" globals="$">// output my log
+console.log($('script').size());</textarea>
+		</section>
+		
 		<section class="slide" id="info">
 			<h2> Repo: </h2>
 			<a href="https://github.com/iros/deck.js-codemirror">https://github.com/iros/deck.js-codemirror</a>
