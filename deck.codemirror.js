@@ -52,7 +52,16 @@
   var codemirrorify = function(slide) {
     var $container = $[deck]('getContainer'),
         opts = $[deck]('getOptions'),
-        codeblocks = $(slide).find(opts.selectors.codemirroritem);
+        codeblocks = $(slide).find(opts.selectors.codemirroritem),
+        hiddenScripts = [];
+
+    // Seek out and cache all hidden scripts
+    $("script[type=codemirror]").each(function() {
+      hiddenScripts.push({
+        selector: $(this).data("selector"),
+        src: this.innerHTML
+      });
+    });
 
     // go through all code blocks
     $.each(codeblocks, function(i, codeblock) {
@@ -114,41 +123,54 @@
             return function(event) {
 
               // save the default logging behavior.
-              var real_console_log = console.log;
-
               // Following Dean Edward's fantastic sandbox code:
               // http://dean.edwards.name/weblog/2006/11/sandbox/+evaluating+js+in+an+iframe
               // create an iframe sandbox for this element.
               var iframe = $("<iframe>")
                 .css("display", "none")
                 .appendTo($d.find('body'));
-              
-              // write a script into the <iframe> and create the sandbox
-              frames[frames.length - 1].document.write(
-                "<script>"+
-                "var MSIE/*@cc_on =1@*/;"+ // sniff
-                "console=parent.console;" +
-                "parent.sandbox=MSIE?this:{eval:function(s){return eval(s)}}"+
-                "<\/script>"
-              );
 
               // Overwrite the default log behavior to pipe to an output element.
-              console.log = function(msg) {     
+              window.log = function(msg) {     
                 if (output.html() !== "") {
-                  output.html(output.html() + "<br />" + msg);  
+                  output.append("<br />" + msg);  
                 } else {
                   output.html(msg);
                 }
               };
 
+              var sandBoxMarkup = "<script>"+
+                "var MSIE/*@cc_on =1@*/;"+ // sniff
+                "console={ log: parent.log };" +
+                "parent.sandbox=MSIE?this:{eval:function(s){return eval(s)}}<\/script>";
+
+              var exposeGlobals;
+              if (exposeGlobals = $(codeblock).attr("globals")) {
+                exposeGlobals = exposeGlobals.split(",");
+
+                $.each(exposeGlobals, function(prop, val) {
+                  iframe[0].contentWindow[val] = window[val];
+                });
+              }
+
+              // write a script into the <iframe> and create the sandbox
+              frames[frames.length - 1].document.write(sandBoxMarkup);
+
+              var combinedSource = "";
+
+              $.each(hiddenScripts, function() {
+                if ($(codeblock).is(this.selector)) {
+                  combinedSource += this.src + "\n";
+                }
+              });
+
+              combinedSource += editor.getValue();
+
               // eval in the sandbox.
-              sandbox.eval(editor.getValue());
+              sandbox.eval(combinedSource);
 
               // get rid of the frame. New Frame for every context.
               iframe.remove();
-
-              // set the old logging behavior back.
-              console.log = real_console_log;
             }
           }(editor, output));
         }
