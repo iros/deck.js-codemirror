@@ -138,7 +138,15 @@
                 if (output.html() !== "") {
                   output.append("<br />" + msg);  
                 } else {
-                  output.html(msg);
+                  
+                  // in case the output is not a string or an html element,
+                  // just stringify it.
+                  try {
+                    output.html(msg);
+                  } catch(e) {
+                    output.html(JSON.stringify(msg));
+                  }
+                  
                 }
               };
 
