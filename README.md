@@ -92,6 +92,23 @@ the editor that it's running for:
       console.log(someVar);
     </textarea>
 
+# Cleanup scripts: #
+
+Sometimes you just have to clean up the mess you made, or have something execute
+after your code that the reader doesn't need to see. No problem! Add a cleanup script
+as follows:
+
+    <script type="codemirror/cleanup" data-selector="#code4">
+      someVar = 20;
+      
+      // This will output 20!
+      console.log(someVar);
+    </script>
+
+    <textarea id="code4" name="code" class="code" mode="javascript" style="display: none;" runnable="true">
+      var someVar = 10;
+    </textarea>
+
 # Globals! #
 
 Sometimes you just need to access a global of some kind. The code in the codemirror editors is executed

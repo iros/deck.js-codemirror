@@ -53,11 +53,20 @@
     var $container = $[deck]('getContainer'),
         opts = $[deck]('getOptions'),
         codeblocks = $(slide).find(opts.selectors.codemirroritem),
-        hiddenScripts = [];
+        hiddenScripts  = [],
+        cleanupScripts = [];
 
     // Seek out and cache all hidden scripts
     $("script[type=codemirror]").each(function() {
       hiddenScripts.push({
+        selector: $(this).data("selector"),
+        src: this.innerHTML
+      });
+    });
+    
+    // Seek out and cache all cleanup scripts
+    $("script[type=\"codemirror/cleanup\"]").each(function() {
+      cleanupScripts.push({
         selector: $(this).data("selector"),
         src: this.innerHTML
       });
@@ -170,9 +179,17 @@
 
               var combinedSource = "";
 
+              // Prepend all setup scripts
               $.each(hiddenScripts, function() {
                 if ($(codeblock).is(this.selector)) {
                   combinedSource += this.src + "\n";
+                }
+              });
+              
+              // Append all cleanup scripts
+              $.each(cleanupScripts, function() {
+                if ($(codeblock).is(this.selector)) {
+                  combinedSource = combinedSource + this.src + "\n";
                 }
               });
 

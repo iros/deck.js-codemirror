@@ -147,6 +147,29 @@ console.log(2);</textarea></div>
 			<div><textarea id="code4" name="code" class="code" mode="javascript" style="display: none;" runnable="true">// output my log
 console.log(someVar);</textarea></div>
     </section>
+    
+    <section class="slide" id="cleanup-script-tags">
+			<h2> Need to run some cleanup for your codes? </h2>
+			<h3> Embed a secret hidden cleanup script tag like so in your slide: </h3>
+			
+			<script type="codemirror/cleanup" data-selector="#code4">
+			  someVar = 12;
+			  console.log(someVar);
+			</script>
+			
+      <code>
+&lt;script type=&quot;codemirror/cleanup&quot; data-selector=&quot;#code3&quot;&gt;<br/>
+  someVar = 12;
+  console.log(someVar);<br/>
+&lt;/script&gt;<br/>
+  		</code>
+  		
+  		<h3> Then your code </h3>
+			<div><textarea id="code4" name="code" class="code" mode="javascript" style="display: none;" runnable="true">
+// set some initial value
+var someVar = 15;
+</textarea></div>
+    </section>
 
     <section class="slide" id="globals">
 			<h2> Sometimes you need some globals </h2>
