@@ -186,14 +186,14 @@
                 }
               });
               
+              combinedSource += editor.getValue();
+              
               // Append all cleanup scripts
               $.each(cleanupScripts, function() {
                 if ($(codeblock).is(this.selector)) {
                   combinedSource = combinedSource + this.src + "\n";
                 }
               });
-
-              combinedSource += editor.getValue();
 
               // eval in the sandbox.
               sandbox.eval(combinedSource);
