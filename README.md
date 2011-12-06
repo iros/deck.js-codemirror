@@ -26,7 +26,7 @@ Include the JS source:
     <!-- Syntax highlighting Modes -->
     
     <!-- javascript -->
-    <script src="../mode/javascript/javascript.js"></script>
+    <script src="../extensions/codemirror/mode/javascript/javascript.js"></script>
 
     <!-- html mode (note html mode requires xml, css and javascript) -->
     <script src="../extensions/codemirror/mode/xml/xml.js"></script>
