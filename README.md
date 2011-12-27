@@ -134,4 +134,10 @@ Regardless of your element type, the following attributes should be set:
 Irene Ros (@ireneros)
 http://bocoup.com
 
+# Contriburors: #
+Much thanks to:
+
+* @tbranyen (Tim Branyen)
+* @Anks (Ankit Solanki)
+
     
