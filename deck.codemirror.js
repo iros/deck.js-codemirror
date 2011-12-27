@@ -143,19 +143,20 @@
                 .appendTo($d.find('body'));
 
               // Overwrite the default log behavior to pipe to an output element.
-              console.log = function(msg) {     
+
+              // Overwrite the default log behavior to pipe to an output element.
+              console.log = function() {
+                var messages = [];
+                // Convert all arguments to Strings (Objects will be JSONified).
+                for (var i = 0; i < arguments.length; i++) {
+                  var value = arguments[i];
+                  messages.push(typeof(value) == 'object' ? JSON.stringify(value) : String(value));
+                }
+                var msg = messages.join(" ");
                 if (output.html() !== "") {
-                  output.append("<br />" + msg);  
+                  output.append("<br />" + msg);
                 } else {
-                  
-                  // in case the output is not a string or an html element,
-                  // just stringify it.
-                  try {
                     output.html(msg);
-                  } catch(e) {
-                    output.html(JSON.stringify(msg));
-                  }
-                  
                 }
               };
 
