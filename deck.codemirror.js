@@ -124,9 +124,19 @@
                 "class" : "button",
                 text : "Run"
               }).prependTo(wrapper),
+              clearButton  = $('<div>', {
+                "class" : "button clear",
+                text : "Clear"
+              }).prependTo(wrapper),
               output = $('<div>', {
                 "class" : opts.classes.codemirrorresult
               }).appendTo($(wrapper).parent());
+
+          clearButton.click(function(editor, output){
+            return function(event) {
+              output.html('');
+            };
+          }(editor, output));
 
           button.click(function(editor, output){
             return function(event) {

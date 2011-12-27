@@ -29,6 +29,8 @@
       top: 8px; }
     .deck-container .slide .CodeMirror .button:hover {
       background-color: #eee; }
+    .deck-container .slide .CodeMirror .button.clear {
+      margin-right: 50px; }
   .deck-container .slide .CodeMirror-scroll {
     /* overflow: auto; */
     /* This is needed to prevent an IE[67] bug where the scrolled content
