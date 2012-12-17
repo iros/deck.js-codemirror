@@ -222,26 +222,11 @@
   };
 
   $d.bind('deck.init', function() {
-    
-    // codemirrorify current and next slide, since we're in the beginning.
-    codemirrorify($.deck('getSlide', 0));
-    codemirrorify($.deck('getSlide', 1));
-  });
-
-  $d.bind('deck.change', function(event, from, to) {
-    var $slides    = $[deck]('getSlides');
-    // codemirrorify previous slide
-    if (to > 0) {
-      codemirrorify($.deck('getSlide', to - 1));
-    } 
-    
-    // codemirrorify current slide
-    codemirrorify($.deck('getSlide', to));
-
-    // codemirrorify next slide
-    if (to+1 < $slides.length) {
-      codemirrorify($.deck('getSlide', to + 1));
-    }
+    //codemirrorify all the decks so that scale is correctly computed
+    var slides = $[deck]('getSlides');
+    $(slides).each(function(i){
+        codemirrorify($.deck('getSlide', i));
+    });
   });
 })(jQuery, 'deck', this);
 
