@@ -45,6 +45,7 @@ Include your favorite CodeMirror syntax style:
     cobalt.css
     default.css
     elegant.css
+    lesser-dark.css
     neat.css
     night.css
 
