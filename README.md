@@ -110,6 +110,44 @@ as follows:
       var someVar = 10;
     </textarea>
 
+# Access CodeMirror block from Setup and Cleanup scripts:
+
+Sometimes when you want to run the contents of the CodeMirror, you want to evaluate from within your setup/cleanup script instead of being evaluated automatically, for example an anonymous Javascript function:
+
+    function(arg) {
+      var result;
+      // do something with arg to produce result 
+      return result;
+    }
+
+To enable suppression of CodeMirror evaluation, but provide access to the CodeMirror object for delayed evaluation. Add the "codemirror" attribute to your codemirror editor with the name of the variable for accessing within the setup/cleanup script as follows:
+
+    <script type="codemirror/cleanup" data-selector="#code4">
+      var editor_contents = cm_editor.getValue();;
+      
+      var arg = 5;
+
+      var anon_fn;
+      
+      eval("anon_fn = (function(){ return " + 
+        editor_contents + ";})()")
+
+      var anon_result = anon_fn(arg);
+
+      // This will output 10!
+      console.log(anon_result);
+    </script>
+
+    <textarea id="code4" name="code" class="code" mode="javascript" style="display: none;" runnable="true" codemirror="cm_editor">
+      function(arg) {
+        var result;
+        // do something with arg to produce result
+        result = arg += 5;
+        return result;
+      }
+    </textarea>
+
+
 # Globals! #
 
 Sometimes you just need to access a global of some kind. The code in the codemirror editors is executed

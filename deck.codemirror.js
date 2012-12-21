@@ -197,7 +197,15 @@
                 }
               });
               
-              combinedSource += editor.getValue();
+              var exposeCM; 
+              if (exposeCM = $(codeblock).attr("codemirror")) {
+                exposeCM = $.trim(exposeCM)
+                if (exposeCM) {
+                  iframe[0].contentWindow[exposeCM] = editor;
+                }
+              } else {
+                combinedSource += editor.getValue();
+              }
               
               // Append all cleanup scripts
               $.each(cleanupScripts, function() {
