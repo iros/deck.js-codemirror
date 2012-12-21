@@ -8,6 +8,15 @@ An example is running here: http://ireneros.com/deck/deck.js-codemirror/introduc
 
 You can also see those slides in the `introduction` folder.
 
+# 1.0.0rc #
+
+Due to CodeMirror 3.0 being somewhat different, I've had to make a few adjustments to the plugin styling. You can test them on the [1.0.0rc](https://github.com/iros/deck.js-codemirror/tree/1.0.0rc) branch. Please submit issues if any exist, otherwise I will be merging this into master in the next few weeks. 
+
+## Upgrade notes ##
+1. Be sure to include the additional `codemirror.css` file.
+
+Thee rest should really behave itself.... I hope.
+ 
 # Installation: #
 
 Move all this into a folder called 'codemirror' in your deck.js/extensions/ folder.
