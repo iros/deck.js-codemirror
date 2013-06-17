@@ -7,14 +7,14 @@
 (function($, deck, undefined) {
 
   var $d = $(document);
-  
+
   /*
   Extends defaults/options.
-  
+
   options.classes.codemirror
-    This class is added to the deck container when there is code in the 
-    slide that should be 
-    
+    This class is added to the deck container when there is code in the
+    slide that should be
+
   options.selectors.codemirror-item
     This class should be added to the element containing code that should
     be highlighted.
@@ -24,7 +24,7 @@
       codemirror: 'deck-codemirror',
       codemirrorresult: 'deck-codemirror-result'
     },
-    
+
     selectors: {
       codemirroritem: '.code',
     },
@@ -32,6 +32,87 @@
     data : {
       codemirrorified: 'codemirrorified'
     },
+
+    evaluatorFactoryFor : {
+      'javascript' : function(editor, output){
+          return function(event) {
+
+          // save the default logging behavior.
+          var real_console_log = console.log;
+
+          // save the default logging behavior.
+          // Following Dean Edward's fantastic sandbox code:
+          // http://dean.edwards.name/weblog/2006/11/sandbox/+evaluating+js+in+an+iframe
+          // create an iframe sandbox for this element.
+          var iframe = $("<iframe>")
+            .css("display", "none")
+            .appendTo($d.find('body'));
+
+          // Overwrite the default log behavior to pipe to an output element.
+          console.log = function() {
+            var messages = [];
+            // Convert all arguments to Strings (Objects will be JSONified).
+            for (var i = 0; i < arguments.length; i++) {
+              var value = arguments[i];
+              messages.push(typeof(value) == 'object' ? JSON.stringify(value) : String(value));
+            }
+            var msg = messages.join(" ");
+            if (output.html() !== "") {
+              output.append("<br />" + msg);
+            } else {
+                output.html(msg);
+            }
+          };
+
+          var sandBoxMarkup = "<script>"+
+            "var MSIE/*@cc_on =1@*/;"+ // sniff
+            "console={ log: parent.console.log };" +
+            "parent.sandbox=MSIE?this:{eval:function(s){return eval(s)}}<\/script>";
+          var exposeGlobals;
+          if (exposeGlobals = $(codeblock).attr("globals")) {
+            exposeGlobals = exposeGlobals.split(",");
+
+            $.each(exposeGlobals, function(prop, val) {
+              val = $.trim(val);
+              iframe[0].contentWindow[val] = window[val];
+            });
+          }
+
+          // write a script into the <iframe> and create the sandbox
+          frames[frames.length - 1].document.write(sandBoxMarkup);
+
+          var combinedSource = "";
+
+          // Prepend all setup scripts
+          $.each(hiddenScripts, function() {
+            if ($(codeblock).is(this.selector)) {
+              combinedSource += this.src + "\n";
+            }
+          });
+
+          combinedSource += editor.getValue();
+
+          // Append all cleanup scripts
+          $.each(cleanupScripts, function() {
+            if ($(codeblock).is(this.selector)) {
+              combinedSource = combinedSource + this.src + "\n";
+            }
+          });
+
+          // eval in the sandbox.
+          sandbox.eval(combinedSource);
+
+          // get rid of the frame. New Frame for every context.
+          iframe.remove();
+
+          // set the old logging behavior back.
+          console.log = real_console_log;
+        }
+      },
+      'no-mode' : function(editor, output){ output.html('mode is not set'); },
+      'default' : function(editor, output, mode){ output.html('evaluator is not available for your mode: ' + mode); }
+    },
+
     codemirror : {
       lineNumbers : true,
       theme : "default",
@@ -42,7 +123,7 @@
       runnable : false
     }
   });
-  
+
   // flag to indicate that we are currently in the editor. Required to stop keypress
   // propagation to all other extensions.
   var inEditor = false;
@@ -63,7 +144,7 @@
         src: this.innerHTML
       });
     });
-    
+
     // Seek out and cache all cleanup scripts
     $("script[type=\"codemirror/cleanup\"]").each(function() {
       cleanupScripts.push({
@@ -98,10 +179,10 @@
         if (codeblock.get(0).nodeName.toUpperCase() === "TEXTAREA") {
           editor = CodeMirror.fromTextArea(codeblock[0], options);
         } else {
-          // else codemirror the element's content and attach to element parent. 
+          // else codemirror the element's content and attach to element parent.
           var parent  = codeblock.parent();
           codeblock.hide();
-          editor      = CodeMirror(parent[0], 
+          editor      = CodeMirror(parent[0],
             $.extend(options, {
               value : codeblock.html()
             })
@@ -138,84 +219,11 @@
             };
           }(editor, output));
 
-          button.click(function(editor, output){
-            return function(event) {
+          // Fetch code evaluator factory based on the mode
+          var mode = codeblock.attr('mode') || 'no-mode';
+	  var factory = opts.evaluatorFactoryFor[mode] || opts.evaluatorFactoryFor['default'];
 
-              // save the default logging behavior.
-              var real_console_log = console.log;
-              
-              // save the default logging behavior.
-              // Following Dean Edward's fantastic sandbox code:
-              // http://dean.edwards.name/weblog/2006/11/sandbox/+evaluating+js+in+an+iframe
-              // create an iframe sandbox for this element.
-              var iframe = $("<iframe>")
-                .css("display", "none")
-                .appendTo($d.find('body'));
-
-              // Overwrite the default log behavior to pipe to an output element.
-
-              // Overwrite the default log behavior to pipe to an output element.
-              console.log = function() {
-                var messages = [];
-                // Convert all arguments to Strings (Objects will be JSONified).
-                for (var i = 0; i < arguments.length; i++) {
-                  var value = arguments[i];
-                  messages.push(typeof(value) == 'object' ? JSON.stringify(value) : String(value));
-                }
-                var msg = messages.join(" ");
-                if (output.html() !== "") {
-                  output.append("<br />" + msg);
-                } else {
-                    output.html(msg);
-                }
-              };
-
-              var sandBoxMarkup = "<script>"+
-                "var MSIE/*@cc_on =1@*/;"+ // sniff
-                "console={ log: parent.console.log };" +
-                "parent.sandbox=MSIE?this:{eval:function(s){return eval(s)}}<\/script>";
-
-              var exposeGlobals;
-              if (exposeGlobals = $(codeblock).attr("globals")) {
-                exposeGlobals = exposeGlobals.split(",");
-
-                $.each(exposeGlobals, function(prop, val) {
-                  val = $.trim(val);
-                  iframe[0].contentWindow[val] = window[val];
-                });
-              }
-
-              // write a script into the <iframe> and create the sandbox
-              frames[frames.length - 1].document.write(sandBoxMarkup);
-
-              var combinedSource = "";
-
-              // Prepend all setup scripts
-              $.each(hiddenScripts, function() {
-                if ($(codeblock).is(this.selector)) {
-                  combinedSource += this.src + "\n";
-                }
-              });
-              
-              combinedSource += editor.getValue();
-              
-              // Append all cleanup scripts
-              $.each(cleanupScripts, function() {
-                if ($(codeblock).is(this.selector)) {
-                  combinedSource = combinedSource + this.src + "\n";
-                }
-              });
-
-              // eval in the sandbox.
-              sandbox.eval(combinedSource);
-
-              // get rid of the frame. New Frame for every context.
-              iframe.remove();
-              
-              // set the old logging behavior back.
-              console.log = real_console_log;
-            }
-          }(editor, output));
+          button.click(factory(editor, output, mode));
         }
       }
     });
@@ -229,6 +237,3 @@
     });
   });
 })(jQuery, 'deck', this);
-
-
-
