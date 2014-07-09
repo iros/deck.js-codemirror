@@ -1,0 +1,13 @@
+{
+  "name": "deck.js-codemirror",
+  "version": "0.0.6",
+  "main": [
+    "deck.codemirror.js",
+    "deck.codemirror.css",
+    "deck.codemirror.scss"
+  ],
+  "ignore": [
+    "**/.*",
+    "components"
+  ]
+}
