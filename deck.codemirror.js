@@ -197,7 +197,13 @@
                 }
               });
               
-              combinedSource += editor.getValue();
+              var editorSource = editor.getValue();
+              var editorCompiled = editorSource;
+              var mode = $(codeblock).attr('mode') || "javascript";
+              if ((mode === 'coffeescript') || (mode == 'x-coffeescript') || (mode === 'text/coffeescript') || (mode == 'text/x-coffeescript')) {
+                editorCompiled = CoffeeScript.compile(editorSource, {bare: true});
+              }
+              combinedSource += editorCompiled;
               
               // Append all cleanup scripts
               $.each(cleanupScripts, function() {
